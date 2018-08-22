@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[foreman.foreman_gridscale]
+file_filter = locale/<lang>/foreman_gridscale.edit.po
+source_file = locale/foreman_gridscale.pot
+source_lang = en
+type = PO
