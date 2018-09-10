@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.license     = 'GPL-3.0'
   s.authors     = ['gridscale']
   s.email       = ['']
-  s.homepage    = ''
+  s.homepage    = 'https://bitbucket.org/gridscale/foreman-gridscale/src/master/'
   s.summary     = ''
   # also update locale/gemspec.rb
   s.description = 'Description of ForemanGridscale.'
@@ -16,4 +16,5 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rubocop'
   s.add_development_dependency 'rdoc'
+  s.add_dependency 'fog-gridscale'
 end

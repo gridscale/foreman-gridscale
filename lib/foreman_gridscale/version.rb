@@ -1,3 +1,3 @@
 module ForemanGridscale
-  VERSION = '0.0.1'.freeze
+  VERSION = '1.3.0'.freeze
 end
