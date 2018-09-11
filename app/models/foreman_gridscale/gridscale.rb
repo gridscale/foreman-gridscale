@@ -1,15 +1,32 @@
 module ForemanGridscale
   class Gridscale < ComputeResource
-    alias_attribute :api_token, :password
-    alias_attribute :user_uuid, :password
+    alias_attribute  :api_token, :password
+    alias_attribute  :user_uuid, :user
 
     has_one :key_pair, :foreign_key => :compute_resource_id, :dependent => :destroy
     delegate  :to => :client
 
+    # attribute :api_token
+    # attribute :user_uuid
+
     validates :api_token, :user_uuid, :presence => true
     before_create :test_connection
 
+    def api_token
+      attrs[:api_token]
+    end
 
+    def user_uuid
+      attrs[:user_uuid]
+    end
+
+    def api_token=(api_token)
+      attrs[:api_token] = api_token
+    end
+
+    def user_uuid=(user_uuid)
+      attrs[:user_uuid] = user_uuid
+    end
 
     def to_label
       "#{name} (#{provider_friendly_name})"
@@ -21,6 +38,27 @@ module ForemanGridscale
         # :ip => :ipv4_address,
         # :ip6 => :ipv6_address
       )
+    end
+
+    def available_servers
+      name = client.servers.all['servers']
+      server_name_list = []
+      name.each do |key, values|
+        server_name_list << values['name']
+      end
+      server_name_list
+    end
+
+    def server_power_on(server_uuid)
+      client.server_power_on(server_uuid)
+    end
+
+    def server_power_off(server_uuid)
+      client.server_power_off(server_uuid)
+    end
+
+    def server_power_status(server_uuid)
+      client.server_power_get(server_uuid)
     end
 
     def self.model_name
@@ -49,15 +87,6 @@ module ForemanGridscale
     #   raise e
     # end
 
-    def available_images
-      images = []
-      collection = client.servers
-      begin
-        images += collection.to_a
-      end until !collection.next_page
-      images
-    end
-
     def server
       # return [] if api_key.blank?
       client.servers
@@ -65,7 +94,7 @@ module ForemanGridscale
 
     def test_connection(options = {})
       super
-      errors[:api_token].empty? && errors[:user_uuid].empty?
+      errors[:token].empty? && errors[:uuid].empty?
     rescue Excon::Errors::Unauthorized => e
       errors[:base] << e.response.body
     rescue Fog::Errors::Error => e
@@ -101,7 +130,16 @@ module ForemanGridscale
     end
 
     def servers_get
-      client.servers.all
+      obj = client.servers_get
+      obj.each do |key, values|
+        values.each do |a,b|
+          b['name']
+        end
+      end
+    end
+
+    def available_network
+      client.networks.all
     end
 
     def server_delete(object_uuid)
@@ -125,11 +163,19 @@ module ForemanGridscale
 
     private
 
+    # def client
+    #   @client ||= Fog::Compute.new(
+    #     :provider => 'gridscale',
+    #     :api_token =>'5a66f6bfc68cab1fb933db0ab8c6480abfe801fabc56995bb8c02f9bb1097957',
+    #     :user_uuid => '92a1a269-bca1-43a0-a4b2-8851141f560a'
+    #   )
+    # end
+
     def client
       @client ||= Fog::Compute.new(
-        :provider => 'gridscale',
-        :api_token =>'5a66f6bfc68cab1fb933db0ab8c6480abfe801fabc56995bb8c02f9bb1097957',
-        :user_uuid => '92a1a269-bca1-43a0-a4b2-8851141f560a'
+          :provider => 'gridscale',
+          :api_token => api_token,
+          :user_uuid => user_uuid
       )
     end
 

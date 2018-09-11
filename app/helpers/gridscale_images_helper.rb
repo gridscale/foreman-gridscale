@@ -1,10 +1,10 @@
 module GridscaleImagesHelper
-  # def gridscale_image_field(f)
-  #   images = @compute_resource.servers_get
-  #   images.each { |image| image.name = image.id if image.name.nil? }
-  #   select_f f, :uuid, images.to_a.sort_by(&:full_name),
-  #            :id, :full_name, {}, :label => _('Image')
-  # end
+  def gridscale_server_field(f)
+    images = @compute_resource.available_servers
+    images.each { |image| image.name = image.id if image.name.nil? }
+    select_f f, :uuid, images.to_a.sort_by(&:full_name),
+             :id, :full_name, {}, :label => _('Image')
+  end
   #
   # def select_image(f, compute_resource)
   #   images = possible_images(compute_resource, nil, nil)
@@ -18,11 +18,19 @@ module GridscaleImagesHelper
   #            { :label => 'Image', :disabled => images.empty? })
   # end
 
-  def select_server(f, compute_resource)
-    server = compute_resource.servers_get()['servers'].values
-    server.each do |key|
-      key['name']
-    end
+  def select_server(compute_resource)
+    compute_resource.servers_get_yo
+    # compute_resource.servers_get['servers'].each do |key, values|
+    #   values
+    # end
+    # server.each do |key, values|
+      # key
+      # pp 'hello'
+      # pp values['name']
+    # end
+    #     .each do |key|
+    #   key['name']
+    # end
     # server
     # select_f(f,
     #          :server,

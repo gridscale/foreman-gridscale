@@ -1,7 +1,7 @@
-<!--<div id='region_selection'>-->
-  <%#= @server.methods.sort %>
+<%#= select_f f, :image, compute_resource.available_servers, :image, :image, {}, {:label => _('')}  %>
+<%= line_count f, compute_resource.available_servers  %>
+
+<!--<div id='test'>-->
+<%#= @compute_resource.servers_get %>
 <!--</div>-->
 
-<div id='server_selection'>
-  <%= select_server(f, compute_resource) %>
-</div>

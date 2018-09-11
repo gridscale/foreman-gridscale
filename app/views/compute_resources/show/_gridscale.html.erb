@@ -15,6 +15,18 @@
 <!--  <td><%#=pp @compute_resource.server_get('28901f5b-7a72-4c82-99fd-318cf4e9c247') %></td>-->
 <!--</tr>-->
 <tr>
-  <td><%= _("current price") %></td>
-  <td><%= @default_region_name %></td>
+  <td><%= _("server list") %></td>
+  <td><%= @compute_resource.available_servers %></td>
 </tr>
+
+<tr>
+  <td><%= _("power status") %></td>
+  <td><%= @compute_resource.server_power_status('28901f5b-7a72-4c82-99fd-318cf4e9c247') %></td>
+</tr>
+<!--gridscale_server_field-->
+
+<!--<tr>-->
+<!--  <td><%#= _("current price") %></td>-->
+<!--  <td><%#= gridscale_server_field(f) %></td>-->
+
+<!--</tr>-->

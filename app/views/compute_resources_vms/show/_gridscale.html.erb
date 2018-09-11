@@ -1,0 +1,14 @@
+<% title @vm.name %>
+<div class='col-md-12'>
+  <table class="table table-bordered table-striped">
+    <tr><th colspan="2">Properties</th></tr>
+    <%= prop :public_ip_address %>
+    <%= prop :private_ip_address %>
+    <%= prop :ipv6_address %>
+    <%= prop :state %>
+    <%= prop :created_at, 'Created' %>
+    <%= prop :image_name, 'Image' if @vm.image.present? %>
+    <%= prop :flavor_name, "Type (flavor)" %>
+    <%= prop :region_name, "Region" %>
+  </table>
+</div>
