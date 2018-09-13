@@ -23,20 +23,20 @@ module FogExtensions
       #   @flavor_name ||= @flavor.try(:name)
       # end
 
-      def image
-        # requires :object_uuid
-        @server ||= service.servers.all
-
-      end
-
-      def image_name
-        @image_name ||= @image.try(:name)
-      end
-
-      def region
-        requires :object_uuid
-        @region ||= service.storages.get(object_uuid)
-      end
+      # def image
+      #   # requires :object_uuid
+      #   @server ||= service.servers.all
+      #
+      # end
+      #
+      # def image_name
+      #   @image_name ||= @image.try(:name)
+      # end
+      #
+      # def region
+      #   requires :object_uuid
+      #   @region ||= service.servers.get(object_uuid)
+      # end
 
       # def region_name
       #   requires :region
@@ -47,10 +47,11 @@ module FogExtensions
       #   [ipv4_address, ipv6_address].flatten.select(&:present?)
       # end
       #
-      # def state
-      #   requires :status
-      #   @state ||= status
-      # end
+
+      def state
+        requires :status
+        @state ||= status
+      end
     end
   end
 end

@@ -43,10 +43,37 @@ module ForemanGridscale
     def available_servers
       name = client.servers.all['servers']
       server_name_list = []
+      server_core_list = []
       name.each do |key, values|
         server_name_list << values['name']
+        server_core_list << values['cores']
       end
       server_name_list
+    end
+
+    def available_cores
+      client.servers.all
+      # server_name_list = []
+      # name.each do |key, valuess|
+      #   valuess.methods.sort
+      # end
+      # server_name_list
+    end
+
+    # def format_body
+    #   data ={'servers' => server_values}
+    # end
+
+    def max_cpu_count
+      16
+    end
+
+    def max_socket_count
+      16
+    end
+
+    def max_memory
+      16.gigabytes
     end
 
     def server_power_on(server_uuid)
@@ -61,13 +88,14 @@ module ForemanGridscale
       client.server_power_get(server_uuid)
     end
 
+    def server_shutdown(server_uuid)
+      client.server_shutdown(server_uuid)
+    end
+
     def self.model_name
       ComputeResource.model_name
     end
 
-    # def capabilities
-    #   [:image]
-    # end
     def create_server(payload )
       client.server_create(payload)
     end
@@ -76,20 +104,6 @@ module ForemanGridscale
       client.servers.get(uuid)
     rescue Fog::Compute::Gridscale::Error
       raise(ActiveRecord::RecordNotFound)
-    end
-
-    # def create_vm(args = {})
-    #   args['ssh_keys'] = [ssh_key] if ssh_key
-    #   args['image'] = args['image_id']
-    #   super(args)
-    # rescue Fog::Errors::Error => e
-    #   logger.error "Unhandled Gridscale error: #{e.class}:#{e.message}\n " + e.backtrace.join("\n ")
-    #   raise e
-    # end
-
-    def server
-      # return [] if api_key.blank?
-      client.servers
     end
 
     def test_connection(options = {})
@@ -101,21 +115,11 @@ module ForemanGridscale
       errors[:base] << e.message
     end
 
-    def storage_get
-      @default_region_name ||= client.storages.all
+    def default_region_name
+      @default_region_name ||= client.servers.all.try(:location_name)
     rescue Excon::Errors::Unauthorized => e
       errors[:base] << e.response.body
     end
-    # def destroy_vm(uuid)
-    #   vm = find_vm_by_uuid(uuid)
-    #   vm.delete if vm.present?
-    #   true
-    # end
-
-    # not supporting update at the moment
-    # def update_required?(*)
-    #   false
-    # end
 
     def self.provider_friendly_name
       'gridscale'
@@ -142,6 +146,10 @@ module ForemanGridscale
       client.networks.all
     end
 
+    def server_network_relation_add(server_uuid, network_uuid)
+      client.server_relation_network_add(server_uuid, network_uuid)
+    end
+
     def server_delete(object_uuid)
       client.server_delete(object_uuid)
     end
@@ -152,24 +160,7 @@ module ForemanGridscale
       errors[:base] << e.response.body
     end
 
-    # def client
-    #   @client ||= Fog::Compute.new(
-    #       :provider => 'gridscale',
-    #       :api_token => api_token,#'5a66f6bfc68cab1fb933db0ab8c6480abfe801fabc56995bb8c02f9bb1097957',
-    #       :user_uuid => user_uuid#'92a1a269-bca1-43a0-a4b2-8851141f560a'
-    #   )
-    # end
-
-
     private
-
-    # def client
-    #   @client ||= Fog::Compute.new(
-    #     :provider => 'gridscale',
-    #     :api_token =>'5a66f6bfc68cab1fb933db0ab8c6480abfe801fabc56995bb8c02f9bb1097957',
-    #     :user_uuid => '92a1a269-bca1-43a0-a4b2-8851141f560a'
-    #   )
-    # end
 
     def client
       @client ||= Fog::Compute.new(

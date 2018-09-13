@@ -1,1 +1,15 @@
-<%= line_count f, compute_resource.available_servers  %>
+<thead>
+<tr>
+  <th><%= _('Name') %></th>
+  <th><%= _('Object Uuid') %></th>
+  <th><%= _('Status') %></th>
+</tr>
+<% @vms.each do |vm| %>
+  <tr>
+    <td><%= vm.name %></td>
+    <td><%= vm.object_uuid %></td>
+    <td> <span <%= vm_power_class(vm.ready?) %>> <%= vm_state(vm) %></span> </td>
+  </tr>
+<% end %>
+</thead>
+
