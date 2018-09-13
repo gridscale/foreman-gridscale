@@ -2,14 +2,19 @@
 <tr>
   <th><%= _('Name') %></th>
   <th><%= _('Object Uuid') %></th>
+  <th><%= _('Cores') %></th>
+  <th><%= _('Memory') %></th>
   <th><%= _('Status') %></th>
 </tr>
+</thead>
+<tbody>
 <% @vms.each do |vm| %>
   <tr>
     <td><%= vm.name %></td>
     <td><%= vm.object_uuid %></td>
+    <td><%= vm.cores %> GB</td>
+    <td><%= vm.memory %> GB</td>
     <td> <span <%= vm_power_class(vm.ready?) %>> <%= vm_state(vm) %></span> </td>
   </tr>
 <% end %>
-</thead>
-
+</tbody>
