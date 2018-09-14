@@ -85,7 +85,7 @@ module ForemanGridscale
     end
 
     def server_power_status(server_uuid)
-      client.server_power_get(server_uuid)
+      client.server_power_get(server_uuid).body['power']
     end
 
     def server_shutdown(server_uuid)
