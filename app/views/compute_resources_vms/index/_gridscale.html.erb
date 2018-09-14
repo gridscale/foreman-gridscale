@@ -5,6 +5,7 @@
   <th><%= _('Cores') %></th>
   <th><%= _('Memory') %></th>
   <th><%= _('Status') %></th>
+  <th><th>
 </tr>
 </thead>
 <tbody>
@@ -14,7 +15,8 @@
     <td><%= vm.object_uuid %></td>
     <td><%= vm.cores %></td>
     <td><%= vm.memory %> GB</td>
-    <td><span <%= vm_power_class(@compute_resource.server_power_status(vm.object_uuid)) %>> <%= @compute_resource.server_power_status(vm.object_uuid) ? "Active" : "Inactive" %></span></td>
+    <td><span <%= vm_power_class(vm.ready?) %>> <%= vm.ready? ? "Active" : "Inactive" %></span></td>
+    <td><%= action_buttons(vm_power_action(vm)) %></td>
   </tr>
 <% end %>
 </tbody>
