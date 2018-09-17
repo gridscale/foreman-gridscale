@@ -5,9 +5,9 @@ module FogExtensions
 
       attr_accessor :object_uuid
 
-      # def identity_to_s
-      #   identity.to_s
-      # end
+      def identity_to_s
+        identity.to_s
+      end
 
       # def vm_description
       #   flavor.try(:name)

@@ -40,64 +40,8 @@ module ForemanGridscale
       )
     end
 
-    def available_servers
-      name = client.servers.all['servers']
-      server_name_list = []
-      server_core_list = []
-      name.each do |key, values|
-        server_name_list << values['name']
-        server_core_list << values['cores']
-      end
-      server_name_list
-    end
-
-    def available_cores
-      client.servers.all
-      # server_name_list = []
-      # name.each do |key, valuess|
-      #   valuess.methods.sort
-      # end
-      # server_name_list
-    end
-
-    # def format_body
-    #   data ={'servers' => server_values}
-    # end
-
-    def max_cpu_count
-      16
-    end
-
-    def max_socket_count
-      16
-    end
-
-    def max_memory
-      16.gigabytes
-    end
-
-    def server_power_on(server_uuid)
-      client.server_power_on(server_uuid)
-    end
-
-    def server_power_off(server_uuid)
-      client.server_power_off(server_uuid)
-    end
-
-    def server_power_status(server_uuid)
-      client.server_power_get(server_uuid).body['power']
-    end
-
-    def server_shutdown(server_uuid)
-      client.server_shutdown(server_uuid)
-    end
-
     def self.model_name
       ComputeResource.model_name
-    end
-
-    def create_server(payload )
-      client.server_create(payload)
     end
 
     def find_vm_by_uuid(uuid)
@@ -125,33 +69,8 @@ module ForemanGridscale
       'gridscale'
     end
 
-    def associated_host(vm)
-      associate_by('network', [vm.public_ip_address])
-    end
-
     def user_data_supported?
       true
-    end
-
-    def servers_get
-      obj = client.servers_get
-      obj.each do |key, values|
-        values.each do |a,b|
-          b['name']
-        end
-      end
-    end
-
-    def available_network
-      client.networks.all
-    end
-
-    def server_network_relation_add(server_uuid, network_uuid)
-      client.server_relation_network_add(server_uuid, network_uuid)
-    end
-
-    def server_delete(object_uuid)
-      client.server_delete(object_uuid)
     end
 
     def server_get(object_uuid)
@@ -170,11 +89,11 @@ module ForemanGridscale
       )
     end
 
-    def vm_instance_defaults
-      super.merge(
-        :size => client.servers.all['servers']
-      )
-    end
+    # def vm_instance_defaults
+    #   super.merge(
+    #     :size => client.servers.all['servers']
+    #   )
+    # end
 
     # Creates a new key pair for each new Gridscale compute resource
     # After creating the key, it uploads it to Gridscale
