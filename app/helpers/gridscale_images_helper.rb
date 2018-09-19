@@ -6,17 +6,16 @@ module GridscaleImagesHelper
              :id, :full_name, {}, :label => _('Image')
   end
   #
-  # def select_image(f, compute_resource)
-  #   images = possible_images(compute_resource, nil, nil)
-  #
-  #   select_f(f,
-  #            :object_uuid,
-  #            images,
-  #            :id,
-  #            :slug,
-  #            { :include_blank => images.empty? || images.size == 1 ? false : _('Please select an image') },
-  #            { :label => 'Image', :disabled => images.empty? })
-  # end
+   def select_ipv4(f, compute_resource)
+     addresses = compute_resource.ips
+    select_f(f,
+             :object_uuid,
+             addresses,
+             :object_uuid,
+             :ip,
+             { :include_blank => true },
+             { :label => 'IP Address'})
+   end
 
   def select_server(compute_resource)
     compute_resource.servers_get_yo

@@ -65,6 +65,10 @@ module ForemanGridscale
       true
     end
 
+    def ips
+      client.ips
+    end
+
     def self.model_name
       ComputeResource.model_name
     end
