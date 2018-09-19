@@ -7,7 +7,15 @@ module GridscaleImagesHelper
   end
   #
    def select_ipv4(f, compute_resource)
-     addresses = compute_resource.ips
+     addresses = Array.new
+     compute_resource.ips.each do |ip|
+	if ip.relations['servers'].empty?
+		addresses << ip
+	end
+	end
+	if addresses.empty?
+		"No IPs available"
+	else
     select_f(f,
              :object_uuid,
              addresses,
@@ -16,6 +24,7 @@ module GridscaleImagesHelper
              { :include_blank => true },
              { :label => 'IP Address'})
    end
+	end
 
   def select_server(compute_resource)
     compute_resource.servers_get_yo
