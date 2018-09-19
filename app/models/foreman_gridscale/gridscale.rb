@@ -12,8 +12,10 @@ module ForemanGridscale
     validates :api_token, :user_uuid, :presence => true
     before_create :test_connection
 
+
     def api_token
       attrs[:api_token]
+
     end
 
     def user_uuid
@@ -28,6 +30,7 @@ module ForemanGridscale
       attrs[:user_uuid] = user_uuid
     end
 
+
     def to_label
       "#{name} (#{provider_friendly_name})"
     end
@@ -35,9 +38,31 @@ module ForemanGridscale
     def provided_attributes
       super.merge(
         :object_uuid => :identity_to_s,
-        # :ip => :ipv4_address,
-        # :ip6 => :ipv6_address
+        :ip => :ipv4_address,
+        :ip6 => :ipv6_address
       )
+    end
+
+    def capabilities
+      [:build]
+    end
+
+
+    def create_vm(args = {})
+      # args['ssh_keys'] = [ssh_key] if ssh_key
+      args['cores'] = args['cores'].to_i
+      args['memory'] = args['memory'].to_i
+      Foreman::Logging.logger('foreman_gridscale').debug "Initializing docker registry for user #{args['memory']}"
+      super(args)
+    rescue Fog::Errors::Error => e
+      logger.error "Unhandled DigitalOcean error: #{e.class}:#{e.message}\n " + e.backtrace.join("\n ")
+      raise e
+    end
+
+    def destroy_vm(uuid)
+      vm = find_vm_by_uuid(uuid)
+      vm.delete if vm.present?
+      true
     end
 
     def self.model_name
@@ -60,7 +85,7 @@ module ForemanGridscale
     end
 
     def default_region_name
-      @default_region_name ||= client.servers.all.try(:location_name)
+      @default_region_name ||= 'de/fra'
     rescue Excon::Errors::Unauthorized => e
       errors[:base] << e.response.body
     end
@@ -73,11 +98,10 @@ module ForemanGridscale
       true
     end
 
-    def server_get(object_uuid)
-      @get_server ||= client.server_get(object_uuid)
-    rescue Excon::Errors::Unauthorized => e
-      errors[:base] << e.response.body
-    end
+    # def new_vm(attr = {})
+    #   test_connection
+    #   client.servers.new vm_instance_defaults.merge(attr.to_hash.deep_symbolize_keys) if errors.empty?
+    # end
 
     private
 
@@ -89,11 +113,11 @@ module ForemanGridscale
       )
     end
 
-    # def vm_instance_defaults
-    #   super.merge(
-    #     :size => client.servers.all['servers']
-    #   )
-    # end
+    def vm_instance_defaults
+      super.merge(
+          :location_uuid => '45ed677b-3702-4b36-be2a-a2eab9827950'
+      )
+    end
 
     # Creates a new key pair for each new Gridscale compute resource
     # After creating the key, it uploads it to Gridscale
