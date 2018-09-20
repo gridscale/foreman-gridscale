@@ -2,6 +2,7 @@ module ForemanGridscale
   class Gridscale < ComputeResource
     alias_attribute  :api_token, :password
     alias_attribute  :user_uuid, :user
+    alias_attribute  :object_uuid, :uuid
 
     has_one :key_pair, :foreign_key => :compute_resource_id, :dependent => :destroy
     delegate  :to => :client
@@ -37,8 +38,8 @@ module ForemanGridscale
 
     def provided_attributes
       super.merge(
-        :object_uuid => :identity_to_s,
-        :ip => :ipaddr_uuid
+        :uuid => :server_uuid,
+        # :ip => :ipaddr_uuid
         # :ip6 => :ipv6_address
       )
     end
