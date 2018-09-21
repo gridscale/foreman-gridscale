@@ -5,9 +5,13 @@ module FogExtensions
 
       attr_accessor :object_uuid
 
-      def identity_to_s
+      def identity_j
         identity.to_s
       end
+      #
+      # def to_s
+      #   name
+      # end
 
       # def vm_description
       #   flavor.try(:name)
@@ -33,10 +37,10 @@ module FogExtensions
       #   @image_name ||= @image.try(:name)
       # end
       #
-      # def region
-      #   requires :object_uuid
-      #   @region ||= service.servers.get(object_uuid)
-      # end
+      def ip_adr
+        requires :ipaddr_uuid
+        @ip_adr ||= service.ips.get(ipaddr_uuid).ip
+      end
 
       # def region_name
       #   requires :region
@@ -47,6 +51,15 @@ module FogExtensions
       #   [ipv4_address, ipv6_address].flatten.select(&:present?)
       # end
       #
+      def interfaces
+        nics
+      end
+
+      def select_nic(fog_nics, nic)
+        nic_attrs = nic.compute_attributes
+        match =   fog_nics.detect { |fn| fn.network_uuid == nic_attrs['network_uuid'] } # grab any nic on the same network
+        match
+      end
 
       def state
         requires :status

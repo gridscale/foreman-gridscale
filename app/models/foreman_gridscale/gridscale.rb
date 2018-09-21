@@ -2,6 +2,7 @@ module ForemanGridscale
   class Gridscale < ComputeResource
     alias_attribute  :api_token, :password
     alias_attribute  :user_uuid, :user
+    alias_attribute  :object_uuid, :uuid
 
     has_one :key_pair, :foreign_key => :compute_resource_id, :dependent => :destroy
     delegate  :to => :client
@@ -37,10 +38,14 @@ module ForemanGridscale
 
     def provided_attributes
       super.merge(
-        :object_uuid => :identity_to_s,
-        :ip => :ipv4_address,
-        :ip6 => :ipv6_address
+        :uuid => :server_uuid,
+        # :ip => :ipaddr_uuid
+        # :ip6 => :ipv6_address
       )
+    end
+
+    def get_ip
+      client.ips.get(ipaddr_uuid).ip
     end
 
     def capabilities
@@ -52,7 +57,9 @@ module ForemanGridscale
       # args['ssh_keys'] = [ssh_key] if ssh_key
       args['cores'] = args['cores'].to_i
       args['memory'] = args['memory'].to_i
-      Foreman::Logging.logger('foreman_gridscale').debug "Initializing docker registry for user #{args['memory']}"
+      # args['ipaddr_uuid'] = args['ipaddr_uuid']
+      # args['network_uuid'] = args['network_uuid']
+      Foreman::Logging.logger('foreman_gridscale').info "Initializing docker registry for user #{args['memory']}"
       super(args)
     rescue Fog::Errors::Error => e
       logger.error "Unhandled DigitalOcean error: #{e.class}:#{e.message}\n " + e.backtrace.join("\n ")
@@ -68,6 +75,22 @@ module ForemanGridscale
     def ips
       client.ips
     end
+
+    def interfaces
+      client.interfaces rescue []
+    end
+
+    def networks
+      client.networks rescue []
+    end
+    #
+    # def network
+    #   client.networks.get(network_uuid)
+    # end
+
+    # def ip
+    #   client.ips.get(ipaddr_uuid)
+    # end
 
     def self.model_name
       ComputeResource.model_name

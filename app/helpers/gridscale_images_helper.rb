@@ -6,28 +6,45 @@ module GridscaleImagesHelper
              :id, :full_name, {}, :label => _('Image')
   end
   #
-   def select_ipv4(f, compute_resource)
-     addresses = Array.new
-     compute_resource.ips.each do |ip|
-	if ip.relations['servers'].empty?
-		addresses << ip
-	end
-	end
-	if addresses.empty?
-		"No IPs available"
-	else
-    select_f(f,
-             :object_uuid,
-             addresses,
-             :object_uuid,
-             :ip,
-             { :include_blank => true },
-             { :label => 'IP Address'})
-   end
-	end
+  def select_ipv4(f, compute_resource)
+    # alias_attribute  :object_uuid, :ipaddr_uuid
+    addresses = Array.new
+    compute_resource.ips.each do |ip|
+       if ip.relations['servers'].empty? and ip.relations['loadbalancers'].empty? and ip.family ==4
+         addresses << ip
+       end
+     end
+    if addresses.empty?
+      "No IPs available"
+    else
+      select_f(f,
+               :ipaddr_uuid,
+               addresses,
+               :object_uuid,
+               :ip,
+               { :include_blank => true },
+               { :label => 'IP Address'})
+    end
+  end
 
-  def select_server(compute_resource)
-    compute_resource.servers_get_yo
+  def select_network(f, compute_resource)
+    networks_list = Array.new
+    compute_resource.networks.each do |network|
+      networks_list << network
+    end
+
+    select_f(f,
+             :network_uuid,
+             networks_list,
+             :object_uuid,
+             :name,
+             { :include_blank => true },
+             { :label => 'available network'})
+
+  end
+
+  # def select_server(compute_resource)
+  #   compute_resource.servers_get_yo
     # compute_resource.servers_get['servers'].each do |key, values|
     #   values
     # end
@@ -48,5 +65,5 @@ module GridscaleImagesHelper
     #          {},
     #          :label => 'server',
     #          :disabled => compute_resource.servers_get.empty?)
-  end
+  # end
 end
