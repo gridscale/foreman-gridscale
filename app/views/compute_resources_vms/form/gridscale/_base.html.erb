@@ -1,5 +1,3 @@
 <%= number_f f, :cores, :label => _("Cores"), :value => 1 %>
 <%= number_f f, :memory, :label => _("Memory in GB"), :value => 2 %>
-<div id='ipv4_selection'>
-  <%=select_ipv4(f, compute_resource) %>
-</div>
+<%= number_f f, :storage, :label => _("Storage in GB"), :value => 0 %>
