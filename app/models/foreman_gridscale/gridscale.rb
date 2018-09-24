@@ -63,7 +63,7 @@ module ForemanGridscale
       # args['ssh_keys'] = [ssh_key] if ssh_key
       args['cores'] = args['cores'].to_i
       args['memory'] = args['memory'].to_i
-      Foreman::Logging.logger('foreman_gridscale').info "Initializing docker registry for user #{args['memory']}"
+      args['storage'] = args['storage'].to_i
       super(args)
     rescue Fog::Errors::Error => e
       logger.error "Unhandled DigitalOcean error: #{e.class}:#{e.message}\n " + e.backtrace.join("\n ")
