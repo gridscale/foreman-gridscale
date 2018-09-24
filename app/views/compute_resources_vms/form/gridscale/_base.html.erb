@@ -1,3 +1,11 @@
 <%= number_f f, :cores, :label => _("Cores"), :value => 1 %>
 <%= number_f f, :memory, :label => _("Memory in GB"), :value => 2 %>
-<%= number_f f, :storage, :label => _("Storage in GB"), :value => 0 %>
+<!--<div id='ipv4_selection'>-->
+  <%#=select_ipv4(f, compute_resource) %>
+<!--</div>-->
+<!--<div id='network_selection'>-->
+  <%#=select_network(f, compute_resource) %>
+<!--</div>-->
+<div id='storage_selection'>
+  <%=select_storage(f, compute_resource) %>
+</div>

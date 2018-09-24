@@ -30,6 +30,7 @@ module GridscaleImagesHelper
   def select_network(f, compute_resource)
     networks_list = Array.new
     compute_resource.networks.each do |network|
+
       networks_list << network
     end
 
@@ -43,27 +44,25 @@ module GridscaleImagesHelper
 
   end
 
-  # def select_server(compute_resource)
-  #   compute_resource.servers_get_yo
-    # compute_resource.servers_get['servers'].each do |key, values|
-    #   values
-    # end
-    # server.each do |key, values|
-      # key
-      # pp 'hello'
-      # pp values['name']
-    # end
-    #     .each do |key|
-    #   key['name']
-    # end
-    # server
-    # select_f(f,
-    #          :server,
-    #          servers,
-    #          :object_uuid,
-    #          :object_uuid,
-    #          {},
-    #          :label => 'server',
-    #          :disabled => compute_resource.servers_get.empty?)
-  # end
+
+
+  def select_storage(f, compute_resource)
+    storages_list = Array.new
+    compute_resource.storages.each do |storage|
+      if storage.relations['servers'].empty?
+        storages_list << storage
+      end
+    end
+    if storages_list.empty?
+      "No storage available"
+    else
+      select_f(f,
+               :storage_uuid,
+               storages_list,
+               :object_uuid,
+               :name,
+               { :include_blank => true },
+               { :label => 'available storage'})
+    end
+  end
 end

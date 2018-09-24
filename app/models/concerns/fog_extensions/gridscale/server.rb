@@ -8,6 +8,13 @@ module FogExtensions
       def identity_j
         identity.to_s
       end
+
+      def current_price
+        current_price.to_s
+      end
+      def create_time
+        create_time.to_s
+      end
       #
       # def to_s
       #   name
@@ -51,15 +58,15 @@ module FogExtensions
       #   [ipv4_address, ipv6_address].flatten.select(&:present?)
       # end
       #
-      def interfaces
-        nics
-      end
-
-      def select_nic(fog_nics, nic)
-        nic_attrs = nic.compute_attributes
-        match =   fog_nics.detect { |fn| fn.network_uuid == nic_attrs['network_uuid'] } # grab any nic on the same network
-        match
-      end
+      # def interfaces
+      #   nics
+      # end
+      #
+      # def select_nic(fog_nics, nic)
+      #   nic_attrs = nic.compute_attributes
+      #   match =   fog_nics.detect { |fn| fn.network_uuid == nic_attrs['network_uuid'] } # grab any nic on the same network
+      #   match
+      # end
 
       def state
         requires :status

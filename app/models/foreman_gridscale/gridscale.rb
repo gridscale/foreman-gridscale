@@ -39,10 +39,16 @@ module ForemanGridscale
     def provided_attributes
       super.merge(
         :uuid => :server_uuid,
-        # :ip => :ipaddr_uuid
+        # :mac => :mac
+        # :ip => :get_ip,
         # :ip6 => :ipv6_address
       )
     end
+
+    # def mac(uuid)
+    #   mac = client.servers.get(uuid).relations['networks'].find {|n|n['server_uuid']==uuid}
+    #   mac['mac']
+    # end
 
     def get_ip
       client.ips.get(ipaddr_uuid).ip
@@ -57,13 +63,22 @@ module ForemanGridscale
       # args['ssh_keys'] = [ssh_key] if ssh_key
       args['cores'] = args['cores'].to_i
       args['memory'] = args['memory'].to_i
-      # args['ipaddr_uuid'] = args['ipaddr_uuid']
-      # args['network_uuid'] = args['network_uuid']
       Foreman::Logging.logger('foreman_gridscale').info "Initializing docker registry for user #{args['memory']}"
       super(args)
     rescue Fog::Errors::Error => e
       logger.error "Unhandled DigitalOcean error: #{e.class}:#{e.message}\n " + e.backtrace.join("\n ")
       raise e
+    end
+
+    def new_vm(attr = {})
+      vm = super
+      interfaces = nested_attributes_for :interfaces, attr[:interfaces_attributes]
+      interfaces.map{ |i| vm.interfaces << new_interface(i)}
+      vm
+    end
+
+    def new_interface(attr = {})
+      client.interfaces.new attr
     end
 
     def destroy_vm(uuid)
@@ -72,21 +87,33 @@ module ForemanGridscale
       true
     end
 
+    def save_vm(uuid, attr)
+      vm = find_vm_by_uuid(uuid)
+      vm.attributes.merge!(attr.symbolize_keys).deep_symbolize_keys
+      update_interfaces(vm, attr[:interfaces_attributes])
+      vm.interfaces
+      vm.save
+    end
+
     def ips
       client.ips
     end
-
+    #
     def interfaces
       client.interfaces rescue []
     end
-
+    #
     def networks
       client.networks rescue []
     end
     #
-    # def network
-    #   client.networks.get(network_uuid)
-    # end
+    def network
+      client.networks.get(network_uuid)
+    end
+
+    def storages
+      client.storages
+    end
 
     # def ip
     #   client.ips.get(ipaddr_uuid)
