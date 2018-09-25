@@ -39,7 +39,7 @@ module GridscaleImagesHelper
              :object_uuid,
              :name,
              { :include_blank => true },
-             { :label => 'available network'})
+             { :label => 'Network'})
 
   end
 

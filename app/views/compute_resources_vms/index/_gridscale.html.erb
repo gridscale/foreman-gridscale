@@ -10,7 +10,7 @@
 <tbody>
 <% @vms.each do |vm| %>
   <tr>
-    <td><%= vm.name %></td>
+ <td><%= link_to_if_authorized vm.name, hash_for_compute_resource_vm_path(:compute_resource_id => @compute_resource, :id => vm.identity).merge(:auth_object => @compute_resource, :authorizer => authorizer) %></td>
     <td><%= vm.object_uuid %></td>
     <td><%= vm.cores %></td>
     <td><%= vm.memory %> GB</td>
