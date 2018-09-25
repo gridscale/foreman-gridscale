@@ -70,20 +70,54 @@ module ForemanGridscale
       raise e
     end
 
-    def new_vm(attr = {})
-      vm = super
-      interfaces = nested_attributes_for :interfaces, attr[:interfaces_attributes]
-      interfaces.map{ |i| vm.interfaces << new_interface(i)}
-      vm
-    end
+    # def new_vm(attr = {})
+    #   vm = super
+    #   interfaces = nested_attributes_for :interfaces, attr[:interfaces_attributes]
+    #   interfaces.map{ |i| vm.interfaces << new_interface(i)}
+    #   vm
+    # end
 
     def new_interface(attr = {})
       client.interfaces.new attr
     end
 
+    # def destroy_vm(uuid)
+    #   vm = find_vm_by_uuid(uuid)
+    #   vm.delete if vm.present?
+    #   true
+    # end
+    def power_check(uuid)
+      client.server_power_get(uuid).body['power']
+    end
+
+    def power_off(uuid)
+      client.server_power_off(uuid)  if power_check(uuid)
+    end
+
     def destroy_vm(uuid)
-      vm = find_vm_by_uuid(uuid)
-      vm.delete if vm.present?
+      attached_storage = []
+      # attached_network =[]
+      client.servers.get(uuid).relations['storages'].each do |storage|
+        attached_storage << storage['object_uuid']
+      end
+      # client.servers.get(uuid).relations['networks'].each do |network|
+      #   attached_network << network['object_uuid']
+      # end
+      if power_check(uuid)
+        client.server_power_off(uuid)
+      end
+      sleep(1) until  client.servers.get(uuid).status != "in-provisioning"
+      find_vm_by_uuid(uuid).destroy
+      sleep(1) until client.servers.get(uuid) == nil
+      pp attached_storage
+      attached_storage.each do |storage_uuid|
+        client.storage_delete(storage_uuid)
+      end
+      # attached_network.each do |network_uuid|
+      #   client.network_delete(network_uuid)
+      # end
+    rescue ActiveRecord::RecordNotFound
+      # if the VM does not exists, we don't really care.
       true
     end
 
