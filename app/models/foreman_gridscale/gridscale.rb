@@ -7,9 +7,6 @@ module ForemanGridscale
     has_one :key_pair, :foreign_key => :compute_resource_id, :dependent => :destroy
     delegate  :to => :client
 
-    # attribute :api_token
-    # attribute :user_uuid
-
     validates :api_token, :user_uuid, :presence => true
     before_create :test_connection
 
@@ -39,16 +36,8 @@ module ForemanGridscale
     def provided_attributes
       super.merge(
         :uuid => :server_uuid,
-        # :mac => :mac
-        # :ip => :get_ip,
-        # :ip6 => :ipv6_address
       )
     end
-
-    # def mac(uuid)
-    #   mac = client.servers.get(uuid).relations['networks'].find {|n|n['server_uuid']==uuid}
-    #   mac['mac']
-    # end
 
     def get_ip
       client.ips.get(ipaddr_uuid).ip
@@ -60,7 +49,6 @@ module ForemanGridscale
 
 
     def create_vm(args = {})
-      # args['ssh_keys'] = [ssh_key] if ssh_key
       args['cores'] = args['cores'].to_i
       args['memory'] = args['memory'].to_i
       args['storage'] = args['storage'].to_i
@@ -70,22 +58,11 @@ module ForemanGridscale
       raise e
     end
 
-    # def new_vm(attr = {})
-    #   vm = super
-    #   interfaces = nested_attributes_for :interfaces, attr[:interfaces_attributes]
-    #   interfaces.map{ |i| vm.interfaces << new_interface(i)}
-    #   vm
-    # end
 
     def new_interface(attr = {})
       client.interfaces.new attr
     end
 
-    # def destroy_vm(uuid)
-    #   vm = find_vm_by_uuid(uuid)
-    #   vm.delete if vm.present?
-    #   true
-    # end
     def power_check(uuid)
       client.server_power_get(uuid).body['power']
     end
@@ -96,26 +73,22 @@ module ForemanGridscale
 
     def destroy_vm(uuid)
       attached_storage = []
-      # attached_network =[]
+
       client.servers.get(uuid).relations['storages'].each do |storage|
         attached_storage << storage['object_uuid']
       end
-      # client.servers.get(uuid).relations['networks'].each do |network|
-      #   attached_network << network['object_uuid']
-      # end
+
       if power_check(uuid)
         client.server_power_off(uuid)
       end
+
       sleep(1) until  client.servers.get(uuid).status != "in-provisioning"
       find_vm_by_uuid(uuid).destroy
       sleep(1) until client.servers.get(uuid) == nil
-      pp attached_storage
+
       attached_storage.each do |storage_uuid|
         client.storage_delete(storage_uuid)
       end
-      # attached_network.each do |network_uuid|
-      #   client.network_delete(network_uuid)
-      # end
     rescue ActiveRecord::RecordNotFound
       # if the VM does not exists, we don't really care.
       true
@@ -132,11 +105,11 @@ module ForemanGridscale
     def ips
       client.ips
     end
-    #
+
     def interfaces
       client.interfaces rescue []
     end
-    #
+
     def networks
       client.networks rescue []
     end
@@ -148,10 +121,6 @@ module ForemanGridscale
     def storages
       client.storages
     end
-
-    # def ip
-    #   client.ips.get(ipaddr_uuid)
-    # end
 
     def self.model_name
       ComputeResource.model_name
@@ -186,66 +155,22 @@ module ForemanGridscale
       true
     end
 
-    # def new_vm(attr = {})
-    #   test_connection
-    #   client.servers.new vm_instance_defaults.merge(attr.to_hash.deep_symbolize_keys) if errors.empty?
-    # end
-
     private
 
     def client
       @client ||= Fog::Compute.new(
-          :provider => 'gridscale',
-          :api_token => api_token,
-          :user_uuid => user_uuid
+        :provider => 'gridscale',
+        :api_token => api_token,
+        :user_uuid => user_uuid
       )
     end
 
     def vm_instance_defaults
       super.merge(
-          :location_uuid => '45ed677b-3702-4b36-be2a-a2eab9827950'
+        :location_uuid => '45ed677b-3702-4b36-be2a-a2eab9827950'
       )
     end
 
-    # Creates a new key pair for each new Gridscale compute resource
-    # After creating the key, it uploads it to Gridscale
-    # def setup_key_pair
-    #   public_key, private_key = generate_key
-    #   key_name = "foreman-#{id}#{Foreman.uuid}"
-    #   client.create_ssh_key key_name, public_key
-    #   KeyPair.create! :name => key_name, :compute_resource_id => id, :secret => private_key
-    # rescue StandardError => e
-    #   logger.warn 'failed to generate key pair'
-    #   logger.error e.message
-    #   logger.error e.backtrace.join("\n")
-    #   destroy_key_pair
-    #   raise
-    # end
 
-    # def destroy_key_pair
-    #   return unless key_pair
-    #   logger.info "removing Gridscale key #{key_pair.name}"
-    #   client.destroy_ssh_key(ssh_key.id) if ssh_key
-    #   key_pair.destroy
-    #   true
-    # rescue StandardError => e
-    #   logger.warn "failed to delete key pair from Gridscale, you might need to cleanup manually : #{e}"
-    # end
-
-    # def ssh_key
-    #   @ssh_key ||= begin
-    #     key = client.list_ssh_keys.data[:body]['ssh_keys'].find { |i| i['name'] == key_pair.name }
-    #     key['id'] if key.present?
-    #   end
-    # end
-
-    # def generate_key
-    #   key = OpenSSL::PKey::RSA.new 2048
-    #   type = key.ssh_type
-    #   data = [key.to_blob].pack('m0')
-    #
-    #   openssh_format_public_key = "#{type} #{data}"
-    #   [openssh_format_public_key, key.to_pem]
-    # end
   end
 end

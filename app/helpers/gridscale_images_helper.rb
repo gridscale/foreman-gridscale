@@ -5,9 +5,8 @@ module GridscaleImagesHelper
     select_f f, :uuid, images.to_a.sort_by(&:full_name),
              :id, :full_name, {}, :label => _('Image')
   end
-  #
+
   def select_ipv4(f, compute_resource)
-    # alias_attribute  :object_uuid, :ipaddr_uuid
     addresses = Array.new
     compute_resource.ips.each do |ip|
        if ip.relations['servers'].empty? and ip.relations['loadbalancers'].empty? and ip.family ==4
