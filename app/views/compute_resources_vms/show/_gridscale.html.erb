@@ -2,8 +2,15 @@
 <div class='col-md-12'>
   <table class="table table-bordered table-striped">
     <tr><th colspan="2">Properties</th></tr>
-    <%= prop :created_time, 'Created Time' %>
+    <%= prop :create_time, 'Created Time' %>
+    <%= prop :cores, 'CPU Cores' %>
+    <tr><td>Memory</td><td><%= @vm.memory %> GB</td></tr>
     <%= prop :current_price, 'Current Price' %>
-    <%= prop :memory, 'memory' %>
+    <%= prop :size, 'Storage' %>
+    <tr><td>Storage</td><td>??</td></tr>
+    <tr>
+	<td>Console</td>
+	<td><a target="_blank" href="https://my.gridscale.io/js/UX/Helper/VNC/terminalModalStandalone.html?uuid=<%= @vm.object_uuid %>&path=api.gridscale.io">Open</a></td>
+    </tr>
   </table>
 </div>
