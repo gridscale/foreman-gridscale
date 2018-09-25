@@ -15,6 +15,16 @@ module FogExtensions
       def create_time
         create_time.to_s
       end
+
+      def memory
+        attributes[:memory].gigabytes
+      end
+
+      def memory=(mem)
+        attributes[:memory] = mem / 1.gigabytes if mem
+      end
+
+
       #
       # def to_s
       #   name
