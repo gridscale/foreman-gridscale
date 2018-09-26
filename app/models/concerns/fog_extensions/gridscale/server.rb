@@ -17,6 +17,10 @@ module FogExtensions
         create_time.to_s
       end
 
+      def mac
+        client.servers.get(:server_uuid).relations['networks'].first['mac']
+      end
+
       def memory
         attributes[:memory].gigabytes
       end

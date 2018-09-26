@@ -1,4 +1,5 @@
 <% title @vm.name %>
+
 <div class='col-md-12'>
   <table class="table table-bordered table-striped">
     <tr><th colspan="2">Properties</th></tr>
@@ -6,8 +7,10 @@
     <%= prop :cores, 'CPU Cores' %>
     <tr><td>Memory</td><td><%= @vm.memory %> GB</td></tr>
     <%= prop :current_price, 'Current Price' %>
-    <%= prop :size, 'Storage' %>
-    <tr><td>Storage</td><td>??</td></tr>
+    <% @vm.relations['storages'].each do |storage| %>
+      <%= capacity = storage['capacity'] %>
+    <tr><td>Storage</td><td><%= capacity %></td></tr>
+    <% end %>
     <tr>
 	<td>Console</td>
 	<td><a target="_blank" href="https://my.gridscale.io/js/UX/Helper/VNC/terminalModalStandalone.html?uuid=<%= @vm.object_uuid %>&path=api.gridscale.io">Open</a></td>
