@@ -29,11 +29,9 @@ module ForemanGridscale
     config.to_prepare do
       require 'fog/gridscale'
       require 'fog/compute/gridscale'
-      require 'fog/compute/gridscale/models/storage'
       require 'fog/compute/gridscale/models/server'
 
-      Fog::Compute::Gridscale::Storage.send :include,
-                                             FogExtensions::Gridscale::Storage
+
       Fog::Compute::Gridscale::Server.send :include,
                                               FogExtensions::Gridscale::Server
       ::Host::Managed.send :include,

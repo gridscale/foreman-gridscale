@@ -8,8 +8,10 @@
     <tr><td>Memory</td><td><%= @vm.memory %> GB</td></tr>
     <%= prop :current_price, 'Current Price' %>
     <% @vm.relations['storages'].each do |storage| %>
-      <%= capacity = storage['capacity'] %>
-    <tr><td>Storage</td><td><%= capacity %></td></tr>
+    <tr><td>Storage</td><td><%= storage['capacity'] %></td></tr>
+    <% end %>
+    <% @vm.relations['networks'].each do |network| %>
+      <tr><td>mac</td><td><%= network['mac'] %></td></tr>
     <% end %>
     <tr>
 	<td>Console</td>

@@ -34,23 +34,12 @@ module ForemanGridscale
     end
 
     def provided_attributes
-
-      # client.servers.get(:server_uuid).relations['networks'].each do |network|
       super.merge(
           :uuid => :server_uuid,
-          # :mac => :mac
           )
       # end
 
     end
-
-    # def mac
-    #   if find_vm_by_uuid(:server_uuid).relations['networks']
-    #     find_vm_by_uuid(:server_uuid).relations['networks'].each do |network|
-    #       network['mac']
-    #     end
-    #   end
-    # end
 
     def get_ip
       client.ips.get(ipaddr_uuid).ip
@@ -168,6 +157,9 @@ module ForemanGridscale
       true
     end
 
+    def new_interface(attr = {})
+      Fog::Compute::Gridscale::Interface.new(attr)
+    end
 
 
     private

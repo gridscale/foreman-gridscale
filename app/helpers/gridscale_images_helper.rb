@@ -29,7 +29,6 @@ module GridscaleImagesHelper
   def select_network(f, compute_resource)
     networks_list = Array.new
     compute_resource.networks.each do |network|
-
       networks_list << network
     end
 
@@ -46,12 +45,15 @@ module GridscaleImagesHelper
 
 
   def select_storage(f, compute_resource)
+
     storages_list = Array.new
+
     compute_resource.storages.each do |storage|
       if storage.relations['servers'].empty?
         storages_list << storage
       end
     end
+
     if storages_list.empty?
       "No storage available"
     else
