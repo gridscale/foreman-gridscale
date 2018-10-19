@@ -9,6 +9,10 @@ module FogExtensions
         requires :status
         @state ||= status
       end
+
+      def to_s
+        name
+      end
     end
   end
 end
