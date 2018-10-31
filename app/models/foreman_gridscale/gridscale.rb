@@ -46,7 +46,7 @@ module ForemanGridscale
     end
 
     def capabilities
-      [:build]
+      [:build, :image]
     end
 
 
