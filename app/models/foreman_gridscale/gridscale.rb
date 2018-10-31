@@ -140,7 +140,7 @@ module ForemanGridscale
 
     def test_connection(options = {})
       super
-      errors[:token].empty? && errors[:uuid].empty?
+      errors[:token].empty? && errors[:uuid].empty? && networks.count
     rescue Excon::Errors::Unauthorized => e
       errors[:base] << e.response.body
     rescue Fog::Errors::Error => e
