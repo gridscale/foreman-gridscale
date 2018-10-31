@@ -35,7 +35,7 @@ module ForemanGridscale
 
     def provided_attributes
       super.merge(
-          :uuid => :server_uuid,
+        :uuid => :server_uuid
           )
       # end
 
@@ -54,9 +54,11 @@ module ForemanGridscale
       args['cores'] = args['cores'].to_i
       args['memory'] = args['memory'].to_i
       args['storage'] = args['storage'].to_i
+
+      #args['location_uuid'] = '39a7d783-3873-4b2f-915b-4c86c28344e5' #test for mydev
       super(args)
     rescue Fog::Errors::Error => e
-      logger.error "Unhandled DigitalOcean error: #{e.class}:#{e.message}\n " + e.backtrace.join("\n ")
+      logger.error "Unhandled gridscale error: #{e.status}:#{e.message}\n " + e.backtrace.join("\n ")
       raise e
     end
 
@@ -83,13 +85,11 @@ module ForemanGridscale
       if power_check(uuid)
         client.server_power_off(uuid)
       end
-
       sleep(1) until  client.servers.get(uuid).status != "in-provisioning"
       find_vm_by_uuid(uuid).destroy
-      sleep(1) until client.servers.get(uuid) == nil
 
       attached_storage.each do |storage_uuid|
-        client.storage_delete(storage_uuid)
+        client.storages.destroy(storage_uuid)
       end
     rescue ActiveRecord::RecordNotFound
       # if the VM does not exists, we don't really care.
@@ -98,9 +98,9 @@ module ForemanGridscale
 
     def save_vm(uuid, attr)
       vm = find_vm_by_uuid(uuid)
+      # attr[:mac] = vm.relations['networks'].first['mac']
       vm.attributes.merge!(attr.symbolize_keys).deep_symbolize_keys
       update_interfaces(vm, attr[:interfaces_attributes])
-      vm.interfaces
       vm.save
     end
 
@@ -122,6 +122,10 @@ module ForemanGridscale
 
     def storages
       client.storages
+    end
+
+    def templates
+      client.templates
     end
 
     def self.model_name

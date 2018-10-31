@@ -66,4 +66,20 @@ module GridscaleImagesHelper
                { :label => 'available storage'})
     end
   end
+
+  def select_template(f, compute_resource)
+    template_list = Array.new
+    compute_resource.templates.each do |template|
+      template_list << template
+    end
+
+    select_f(f,
+             :template_uuid,
+             template_list,
+             :object_uuid,
+             :name,
+             { :include_blank => true },
+             { :label => 'Template'})
+
+  end
 end
