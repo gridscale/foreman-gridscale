@@ -51,7 +51,9 @@ module ForemanGridscale
     end
 
     def capabilities
+
       [:build, :images]
+
     end
 
     def create_vm(args = {})
