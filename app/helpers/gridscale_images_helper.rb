@@ -17,12 +17,32 @@ module GridscaleImagesHelper
       "No IPs available"
     else
       select_f(f,
-               :ipaddr_uuid,
+               :ipv4_uuid,
                addresses,
                :object_uuid,
                :ip,
                { :include_blank => true },
-               { :label => 'IP Address'})
+               { :label => 'IP Address 4'})
+    end
+  end
+
+  def select_ipv6(f, compute_resource)
+    addresses = Array.new
+    compute_resource.ips.each do |ip|
+      if ip.relations['servers'].empty? and ip.relations['loadbalancers'].empty? and ip.family ==6
+        addresses << ip
+      end
+    end
+    if addresses.empty?
+      "No IPs available"
+    else
+      select_f(f,
+               :ipv6_uuid,
+               addresses,
+               :object_uuid,
+               :ip,
+               { :include_blank => true },
+               { :label => 'IP Address 6'})
     end
   end
 
@@ -81,5 +101,28 @@ module GridscaleImagesHelper
              { :include_blank => true },
              { :label => 'Template'})
 
+  end
+
+  def select_sshkey(f, compute_resource)
+    template_list = Array.new
+    compute_resource.sshkeys.each do |template|
+      template_list << template
+    end
+
+    select_f(f,
+             :sshkey_uuid,
+             template_list,
+             :object_uuid,
+             :sshkey,
+             { :include_blank => true },
+             { :label => 'Template'})
+
+  end
+
+  def gridscale_image_field(f)
+    images = @compute_resource.available_templates
+    images.each { |image| image.name = image.object_uuid if image.name.nil? }
+    select_f f, :object_uuid, images.to_a,
+             :object_uuid, :name, {}, :label => _('Image')
   end
 end

@@ -28,14 +28,19 @@ module ForemanGridscale
       attrs[:user_uuid] = user_uuid
     end
 
-
     def to_label
       "#{name} (#{provider_friendly_name})"
     end
 
     def provided_attributes
-      super.merge(
-        :uuid => :server_uuid
+      super.merge({}
+            # :uuid => :object_uuid ,
+            # :mac => :mac
+            # ,
+            # :ip => :ipv4_address,
+            # :ip6 => :ipv6_address
+
+
           )
       # end
 
@@ -46,22 +51,19 @@ module ForemanGridscale
     end
 
     def capabilities
-      [:build]
+      [:build, :images]
     end
-
 
     def create_vm(args = {})
       args['cores'] = args['cores'].to_i
       args['memory'] = args['memory'].to_i
       args['storage'] = args['storage'].to_i
-
-      #args['location_uuid'] = '39a7d783-3873-4b2f-915b-4c86c28344e5' #test for mydev
       super(args)
+      # Foreman::Logging.logger(‘foreman_gridscale’).info "This is a log message which doesnt work or look weird: #{foreman_gridscale}"
     rescue Fog::Errors::Error => e
       logger.error "Unhandled gridscale error: #{e.status}:#{e.message}\n " + e.backtrace.join("\n ")
       raise e
     end
-
 
     def new_interface(attr = {})
       client.interfaces.new attr
@@ -98,7 +100,9 @@ module ForemanGridscale
 
     def save_vm(uuid, attr)
       vm = find_vm_by_uuid(uuid)
-      # attr[:mac] = vm.relations['networks'].first['mac']
+      # attr[:ip] = vm[:ipv4_address]
+      # attr[:ip6] = vm[:ipv4_address]
+      # attr[:mac] = vm[:mac]
       vm.attributes.merge!(attr.symbolize_keys).deep_symbolize_keys
       update_interfaces(vm, attr[:interfaces_attributes])
       vm.save
@@ -115,6 +119,7 @@ module ForemanGridscale
     def networks
       client.networks rescue []
     end
+
     #
     def network
       client.networks.get(network_uuid)
@@ -126,6 +131,19 @@ module ForemanGridscale
 
     def templates
       client.templates
+    end
+
+    def sshkeys
+      client.sshkeys
+    end
+
+    def available_templates
+      images = []
+      collection = client.templates
+      begin
+        images += collection.to_a
+      end until !collection.next_page
+      images
     end
 
     def self.model_name
@@ -161,9 +179,9 @@ module ForemanGridscale
       true
     end
 
-    def new_interface(attr = {})
-      Fog::Compute::Gridscale::Interface.new(attr)
-    end
+    # def new_interface(attr = {})
+    #   Fog::Compute::Gridscale::Interface.new(attr)
+    # end
 
 
     private

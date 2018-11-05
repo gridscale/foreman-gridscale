@@ -2,3 +2,9 @@
   <%=select_network(f, compute_resource) %>
 </div>
 <%= checkbox_f f, :bootable, :label => _('Bootable'), :label_size => "col-md-2" %>
+<div id='ipv4_selection'>
+  <%=select_ipv4(f, compute_resource) %>
+</div>
+<div id='ipv6_selection'>
+  <%=select_ipv6(f, compute_resource) %>
+</div>
