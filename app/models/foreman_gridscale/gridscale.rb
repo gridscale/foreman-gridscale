@@ -33,35 +33,27 @@ module ForemanGridscale
     end
 
     def provided_attributes
-      super.merge({}
-            # :uuid => :object_uuid ,
-            # :mac => :mac
-            # ,
-            # :ip => :ipv4_address,
-            # :ip6 => :ipv6_address
-
-
-          )
-      # end
-
+      super.merge({})
     end
 
-    def get_ip
+    def get_ip(ipaddr_uuid)
       client.ips.get(ipaddr_uuid).ip
     end
 
     def capabilities
-
       [:build, :images]
+    end
 
+    def associated_host(vm)
+      associate_by('ip', [vm.ipv4_address])
     end
 
     def create_vm(args = {})
       args['cores'] = args['cores'].to_i
       args['memory'] = args['memory'].to_i
       args['storage'] = args['storage'].to_i
+
       super(args)
-      # Foreman::Logging.logger(‘foreman_gridscale’).info "This is a log message which doesnt work or look weird: #{foreman_gridscale}"
     rescue Fog::Errors::Error => e
       logger.error "Unhandled gridscale error: #{e.status}:#{e.message}\n " + e.backtrace.join("\n ")
       raise e
@@ -102,9 +94,6 @@ module ForemanGridscale
 
     def save_vm(uuid, attr)
       vm = find_vm_by_uuid(uuid)
-      # attr[:ip] = vm[:ipv4_address]
-      # attr[:ip6] = vm[:ipv4_address]
-      # attr[:mac] = vm[:mac]
       vm.attributes.merge!(attr.symbolize_keys).deep_symbolize_keys
       update_interfaces(vm, attr[:interfaces_attributes])
       vm.save
@@ -181,11 +170,6 @@ module ForemanGridscale
       true
     end
 
-    # def new_interface(attr = {})
-    #   Fog::Compute::Gridscale::Interface.new(attr)
-    # end
-
-
     private
 
     def client
@@ -200,6 +184,13 @@ module ForemanGridscale
       super.merge(
         :location_uuid => '45ed677b-3702-4b36-be2a-a2eab9827950'
       )
+    end
+
+    def default_iface_name(interfaces)
+      nic_name_num = 1
+      name_blacklist = interfaces.map{ |i| i[:name]}.reject{|n| n.blank?}
+      nic_name_num += 1 while name_blacklist.include?("nic#{nic_name_num}")
+      "nic#{nic_name_num}"
     end
 
 

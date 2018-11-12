@@ -3,7 +3,7 @@ module FogExtensions
     module Server
       extend ActiveSupport::Concern
 
-      attr_accessor :object_uuid
+      attr_accessor :object_uuid, :mac, :server_uuid, :interfaces_attributes, :ipv4_address, :ipv6_address
 
       def state
         requires :status
@@ -12,13 +12,6 @@ module FogExtensions
 
       def to_s
         name
-      end
-      # def ip_addresses
-      #   [ipv4_address, ipv6_address]
-      # end
-
-      def interfaces
-        relations['networks'].first
       end
 
       def reset
@@ -31,19 +24,39 @@ module FogExtensions
 
       def ip_addresses
         [ipv4_address, ipv6_address].flatten.select(&:present?)
+
       end
 
-      # def mac
-      #   if relations['networks'] and relations['networks'] != []
-      #     if relations['networks'].first
-      #       if relations['networks'].first['mac'] != nil
-      #         relations['networks'].first['mac']
-      #       else
-      #         nil
-      #       end
-      #     end
-      #   end
-      # end
+      def ip4_add_in
+        x = nil
+        if interfaces_attributes != nil
+          interfaces_attributes.each do |key, value|
+
+            if value["ipv4_uuid"] !=nil && value["ipv4_uuid"] != ""
+              x = service.ips.get(value["ipv4_uuid"])
+            end
+          end
+        end
+        x.ip
+      end
+
+      def ip6_add_in
+        x = nil
+        if interfaces_attributes != nil
+          interfaces_attributes.each do |key, value|
+
+            if value["ipv6_uuid"] !=nil && value["ipv6_uuid"] != ""
+              x = service.ips.get(value["ipv6_uuid"])
+            end
+          end
+        end
+        x.ip
+      end
+
+      def mac_addr
+        :mac
+      end
+
 
     end
   end
