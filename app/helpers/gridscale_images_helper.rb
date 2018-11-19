@@ -113,9 +113,9 @@ module GridscaleImagesHelper
              :sshkey_uuid,
              template_list,
              :object_uuid,
-             :sshkey,
+             :name,
              { :include_blank => true },
-             { :label => 'Template'})
+             { :label => 'SSH Key'})
 
   end
 
