@@ -8,14 +8,21 @@
 
 2. In the foreman/bundler.d directory(usually found in /usr/share/), create or edit the file Gemfile.local.rb and add the following lines to it:
 
-    ```
+    ```ruby
     gem 'fog-gridscale', :path => 'path to fog-gridscale directory'
     gem 'foreman_gridscale', :path => 'path to foreman-gridscale directory'
     ```
 
-3. Make sure to add the paths to the two directories extracted from the archive.
+3. Next run the following command: 
 
-4. Restart the Foreman process.
+    ```
+    $ cd /usr/share/foreman && sudo -u foreman /usr/bin/foreman-ruby /usr/bin/bundle install
+    ```
+
+4. Then restart Foreman with:
+    ```
+    $ touch /usr/share/foreman/tmp/restart.txt
+    ```
 
 See [How_to_Install_a_Plugin](http://projects.theforeman.org/projects/foreman/wiki/How_to_Install_a_Plugin)
 for how to install Foreman plugins
@@ -35,7 +42,7 @@ You should see something like this in the [Compute Resource](https://theforeman.
 ### Host Creation
 1. Go to host > create host and choose gridscale as a deployment target. the virtual machine tab with all of the parameter field to create a server will appear.
 2. If you already set up your compute profile, you can choose it and it will automatically set up the virtual machine parameter. you can also overwrite them
-3. On the virtual machine tab, Fill in the fields with a desire number cores, memory, and capacity of the storage. 
+3. On the virtual machine tab, Fill in the fields with a desire number cores, memory, and capacity of the storage. You can also attached the gridscale template or your private template to your storage.
 4. fill the operating system tab 
 5. In the interface tab, click the edit button in actions column, and pick gridscale network interface you wish to connect your machine. you can also add multiple network interfaces by clicking the add interface button below the interface table. click OK when you finish
 6. Click submit button to finish the Host creation
@@ -73,6 +80,5 @@ Go to Infrastructure > Compute resource and select the compute resource for grid
 * The data shown in the VM tab of a host is not complete. More input about which information is useful is needed.
 * Opening the console of a host in Foreman has not been implemented, but a link to gridscale is supplied.
 * Acpi power off fails to shut down a system which did not boot.
-* MAC information is in VM tab, not in Interface.
-* The installation instructions currently only apply to setups similar our Foreman installation. If Foreman has been installed through the foreman-installer, this method may not work.
+* MAC, IP4 and IP6 information are in VM tab, not in Interface.
 
