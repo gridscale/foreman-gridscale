@@ -1,5 +1,6 @@
 .bundle/
 .DS_Store
+.idea
 log/*.log
 pkg/
 foreman_gridscale-*.gem
