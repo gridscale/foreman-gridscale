@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.3.0] 
+## [v1.0.0] 
 
 - Initial release of foreman-gridscale
 
