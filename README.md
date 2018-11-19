@@ -1,12 +1,12 @@
 # ForemanGridscale
 
-*Plugin to enable management of Gridscale VM in foreman*
+*Plugin to enable management of gridscale instances from within foreman*
 
 ## Installation
 
 1. Extract the supplied archive on the server which has Foreman installed on it. Make sure to do this in a directory which can be accessed by the user running Foreman.
 
-2. In the foreman/bundler.d directory(usually found in /usr/share/), create or edit the file Gemfile.local.rb and add the following lines to it:
+2. In the foreman/bundler.d directory (usually found in /usr/share/), create or edit the file Gemfile.local.rb and add the following lines to it:
 
     ```ruby
     gem 'fog-gridscale', :path => 'path to fog-gridscale directory'
@@ -56,7 +56,7 @@ You should see something like this in the [Compute Resource](https://theforeman.
 6. Now you are ready to use your compute profile
 
 ### Host Management
-Click Host > All Host. and you will be able to see all of the hosts that created through foreman in the tables. in a power column displays the power status of the server. The host’s details can be seen by clicking the link in its name.
+Click Host > All Host. and you will be able to see all of the hosts that created through foreman in the tables. In a power column displays the power status of the server. The host’s details can be seen by clicking the link in its name.
     
 **Powering off/on**
 1. Choose the host by checking the box on the first column of the table (you can select all of the hosts by checking the box on the header)
@@ -74,7 +74,7 @@ Click Host > All Host. and you will be able to see all of the hosts that created
 Go to Infrastructure > Compute resource and select the compute resource for gridscale. go to virtual machine tab. The virtual machine tab displays all of the server in the gridscale panel.
 
 ##Known Issues
-* When creating a host, multiple network interfaces can be set to bootable.The gridscale platform does not support this, which is why only one of the interfaces will actually be set to bootable if this is the case.
+* When creating a host, multiple network interfaces can be set to bootable. The gridscale platform does not support this, which is why only one of the interfaces will actually be set to bootable if this is the case.
 * When creating a compute profile, the chosen network interface configuration is not saved.
 * The Virtual Machines overview of a compute resource can take a long time to load.
 * The data shown in the VM tab of a host is not complete. More input about which information is useful is needed.
