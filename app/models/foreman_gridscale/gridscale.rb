@@ -13,7 +13,6 @@ module ForemanGridscale
 
     def api_token
       attrs[:api_token]
-
     end
 
     def user_uuid
@@ -111,7 +110,6 @@ module ForemanGridscale
       client.networks rescue []
     end
 
-    #
     def network
       client.networks.get(network_uuid)
     end
