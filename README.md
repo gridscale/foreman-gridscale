@@ -52,7 +52,7 @@ You should see something like this on the [Compute Resource](https://theforeman.
 3. Fill in the name field, and click the submit button
 4. Click on the compute resource link that you want to associate with your compute profile
 5. Fill out the compute profile attributes and click the submit button
-6. Your now ready to use your compute profile
+6. You are now ready to use your compute profile
 
 ### Host Management
 Click Host > All Host. You will be able to see all of the hosts that were created through foreman in the tables. The Power column shows the power status of the server. The host’s details can be seen by clicking the link in its name.
