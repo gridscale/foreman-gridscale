@@ -2,6 +2,12 @@
 
 *Plugin to enable management of gridscale instances from within foreman*
 
+## Requirements
+Foreman gridscale has the following requirements:
+
+* Foreman 1.16+
+* A working internet connection
+
 ## Installation
 
 1. Extract the supplied archive on the server which has Foreman installed on it. Make sure to do this in a directory which can be accessed by the user running Foreman.
