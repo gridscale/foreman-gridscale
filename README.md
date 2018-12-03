@@ -5,7 +5,7 @@
 ## Requirements
 Foreman gridscale has the following requirements:
 
-* Foreman 1.16+
+* Foreman 1.15+
 * A working internet connection
 
 ## Installation
