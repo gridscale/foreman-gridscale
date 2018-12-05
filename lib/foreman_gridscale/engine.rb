@@ -16,7 +16,7 @@ module ForemanGridscale
 
     initializer 'foreman_gridscale.register_plugin', :before => :finisher_hook do
       Foreman::Plugin.register :foreman_gridscale do
-        requires_foreman '>= 1.16'
+        requires_foreman '>= 1.15'
         compute_resource ForemanGridscale::Gridscale
         parameter_filter ComputeResource, :api_token, :user_uuid
       end
