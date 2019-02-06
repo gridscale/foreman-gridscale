@@ -10,6 +10,9 @@ module ForemanGridscale
     validates :api_token, :user_uuid, :presence => true
     before_create :test_connection
 
+    def supports_update?
+      true
+    end
 
     def api_token
       attrs[:api_token]
@@ -124,6 +127,10 @@ module ForemanGridscale
 
     def sshkeys
       client.sshkeys
+    end
+
+    def isoimages
+      client.isoimages
     end
 
     def available_templates
