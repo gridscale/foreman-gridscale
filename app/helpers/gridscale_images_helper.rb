@@ -9,7 +9,7 @@ module GridscaleImagesHelper
   def select_ipv4(f, compute_resource)
     addresses = Array.new
     compute_resource.ips.each do |ip|
-       if ip.relations['servers'].empty? and ip.relations['loadbalancers'].empty? and ip.family ==4
+       if ip.relations['servers'].empty? and ip.relations['loadbalancers'].empty? and ip.family ==4 and ip.failover = false
          addresses << ip
        end
      end
@@ -29,7 +29,7 @@ module GridscaleImagesHelper
   def select_ipv6(f, compute_resource)
     addresses = Array.new
     compute_resource.ips.each do |ip|
-      if ip.relations['servers'].empty? and ip.relations['loadbalancers'].empty? and ip.family ==6
+      if ip.relations['servers'].empty? and ip.relations['loadbalancers'].empty? and ip.family ==6 and ip.failover = false
         addresses << ip
       end
     end
@@ -116,6 +116,22 @@ module GridscaleImagesHelper
              :name,
              { :include_blank => true },
              { :label => 'SSH Key'})
+
+  end
+
+  def select_isoimage(f, compute_resource)
+    template_list = Array.new
+    compute_resource.isoimages.each do |isoimage|
+      template_list << isoimage
+    end
+
+    select_f(f,
+             :isoimage_uuid,
+             template_list,
+             :object_uuid,
+             :name,
+             { :include_blank => true },
+             { :label => 'Iso-image'})
 
   end
 

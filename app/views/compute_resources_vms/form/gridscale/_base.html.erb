@@ -1,6 +1,10 @@
 <%= number_f f, :cores, :label => _("Cores") , :required =>true%>
 <%= number_f f, :memory, :label => _("Memory in GB"), :required =>true%>
 <%= number_f f, :storage, :label => _("Storage in GB") %>
+
+<div id='isoimage_selection'>
+  <%=select_isoimage(f, compute_resource) %>
+</div>
 <div id='template_selection'>
   <%=select_template(f, compute_resource) %>
 </div>
