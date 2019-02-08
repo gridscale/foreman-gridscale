@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.0.2]
+
+- Allowed creating host to choose isoimage which available in gridscale user account
+- Failover IPs are now correctly filtered out
+- Targeting a correct URL to open VNC for a regular user
+
 ## [v1.0.1]
 
 - Decresed dependency to foreman 1.15
