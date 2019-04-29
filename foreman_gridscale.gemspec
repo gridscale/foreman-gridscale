@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.license     = 'GPL-3.0'
   s.authors     = ['Aldemuro Haris', 'Wouter Wijsman']
   s.email       = ['aldemuro@gridscale.io', 'wouter@gridscale.io']
-  s.homepage    = 'https://bitbucket.org/gridscale/foreman-gridscale/'
+  s.homepage    = 'https://github.com/gridscale/foreman-gridscale'
   s.summary     = 'Provision and manage gridscale instances from Foreman'
   # also update locale/gemspec.rb
   s.description = 'gridscale provider for Foreman'

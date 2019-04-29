@@ -12,7 +12,7 @@ enhancement requests, bug reports, or code contributions!
 ## Reporting Bugs or Enhancement Requests
 
 Please submit bugs or enhancement requests through the public bug tracker within the
-bitbucket project.
+GitHub project.
 
 ## Submitting Patches
 

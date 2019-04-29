@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.3]
+
+- Update descriptions and links after moving the repository to GitHub.
+
 ## [v1.0.2]
 
 - Allowed creating host to choose isoimage which available in gridscale user account
