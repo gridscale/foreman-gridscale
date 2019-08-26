@@ -58,10 +58,6 @@ module FogExtensions
       end
 
       def select_nic(fog_nics, nic)
-        # NB: fog_nics seems to be always nil here so this raises an exception.
-        # 
-        # if we would have a list of interfaces in fog_nics, we would need to
-        # return the one from fog_nics we want to match to the foreman nic.
         # foreman-xenserver uses fog_nics[0] here, so I'll just copy that for now.
         fog_nics[0]
       end
