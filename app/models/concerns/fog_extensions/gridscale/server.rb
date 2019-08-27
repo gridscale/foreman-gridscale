@@ -57,7 +57,10 @@ module FogExtensions
         :mac
       end
 
-
+      def select_nic(fog_nics, nic)
+        # foreman-xenserver uses fog_nics[0] here, so I'll just copy that for now.
+        fog_nics[0]
+      end
     end
   end
 end
