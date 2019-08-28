@@ -35,7 +35,7 @@ module ForemanGridscale
     end
 
     def provided_attributes
-      super.merge({})
+      super.merge({:mac => :mac})
     end
 
     def get_ip(ipaddr_uuid)
