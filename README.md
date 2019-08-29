@@ -82,8 +82,6 @@ Go to Infrastructure > Compute resource and select the compute resource for grid
 * When creating a host, multiple network interfaces can be set to bootable. The gridscale platform does not support this, which is why only one of the interfaces will actually be set to bootable if this is the case
 * When creating a compute profile, the chosen network interface configuration is not saved
 * The Virtual Machines overview of a compute resource can take a long time to load
-* The data shown in the VM tab of a host is not complete. More input about which information is useful is needed
 * Opening the console of a host in Foreman has not been implemented, but a link to gridscale is supplied
 * Acpi power off fails to shut down a system which did not boot
-* MAC, IP4 and IP6 information is in the VM tab, not Interface
 
