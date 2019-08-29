@@ -4,6 +4,8 @@ module FogExtensions
       extend ActiveSupport::Concern
 
       attr_accessor :object_uuid, :mac, :server_uuid, :interfaces_attributes, :ipv4_address, :ipv6_address
+      alias_attribute :ip, :ipv4_address
+      alias_attribute :ip6, :ipv6_address
 
       def state
         requires :status
