@@ -2,7 +2,9 @@
 
 ## [v1.X.X] (Unreleased)
 
-- fix IP-Selection (GH-1)
+- Fix IP-Selection (GH-1)
+- Add MAC to model (GH-2/GH-3)
+- Display IPv4/IPv6 in interface tab (GH-4)
 
 ## [v1.0.3] (Apr 29, 2019)
 
