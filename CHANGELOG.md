@@ -1,6 +1,6 @@
 # Changelog
 
-## [v1.X.X] (Unreleased)
+## [v1.2.0] (Aug 29, 2019)
 
 - Fix IP-Selection (GH-1)
 - Add MAC to model (GH-2/GH-3)
