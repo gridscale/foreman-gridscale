@@ -9,7 +9,7 @@ module GridscaleImagesHelper
   def select_ipv4(f, compute_resource)
     addresses = Array.new
     compute_resource.ips.each do |ip|
-       if ip.relations['servers'].empty? and ip.relations['loadbalancers'].empty? and ip.family ==4 and ip.failover = false
+       if ip.relations['servers'].empty? and ip.relations['loadbalancers'].empty? and ip.family ==4 and ip.failover == false
          addresses << ip
        end
      end
@@ -29,7 +29,7 @@ module GridscaleImagesHelper
   def select_ipv6(f, compute_resource)
     addresses = Array.new
     compute_resource.ips.each do |ip|
-      if ip.relations['servers'].empty? and ip.relations['loadbalancers'].empty? and ip.family ==6 and ip.failover = false
+      if ip.relations['servers'].empty? and ip.relations['loadbalancers'].empty? and ip.family ==6 and ip.failover == false
         addresses << ip
       end
     end

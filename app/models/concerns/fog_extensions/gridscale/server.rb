@@ -4,6 +4,8 @@ module FogExtensions
       extend ActiveSupport::Concern
 
       attr_accessor :object_uuid, :mac, :server_uuid, :interfaces_attributes, :ipv4_address, :ipv6_address
+      alias_attribute :ip, :ipv4_address
+      alias_attribute :ip6, :ipv6_address
 
       def state
         requires :status
@@ -57,7 +59,10 @@ module FogExtensions
         :mac
       end
 
-
+      def select_nic(fog_nics, nic)
+        # foreman-xenserver uses fog_nics[0] here, so I'll just copy that for now.
+        fog_nics[0]
+      end
     end
   end
 end

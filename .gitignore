@@ -12,3 +12,4 @@ locale/*.mo
 locale/*/*.edit.po
 locale/*/*.po.time_stamp
 locale/*/*.pox
+Dockerfile
